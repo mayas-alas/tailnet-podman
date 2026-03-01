@@ -68,7 +68,7 @@ RUN set -eu && \
     tar -xf /tmp/novnc.tar.gz -C /tmp/ && \
     cd "/tmp/noVNC-${VERSION_VNC}" && \
     mv app core vendor package.json ./*.html /usr/share/novnc && \
-    unlink /etc/nginx/sites-enabled/default && \
+    rm -rf /etc/nginx/sites-enabled/default && \
     sed -i 's/^worker_processes.*/worker_processes 1;/' /etc/nginx/nginx.conf && \
     echo "$VERSION_ARG" > /run/version && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
