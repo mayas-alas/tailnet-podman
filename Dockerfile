@@ -3,14 +3,29 @@
 FROM debian:trixie-slim
 
 ARG TARGETARCH
-ARG VERSION_ARG="0.0"
+ARG VERSION="0.0.4-beta"
 ARG VERSION_UTK="1.2.0"
 ARG VERSION_VNC="1.7.0-beta"
 ARG VERSION_PASST="2025_09_19"
-
+ARG BUILD_DATE
+ARG REVISION
 ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG DEBCONF_NONINTERACTIVE_SEEN="true"
+
+
+LABEL org.opencontainers.image.authors="Maya <mayas.alas@email.gnx>"
+LABEL org.opencontainers.image.title="Tailnet"
+LABEL org.opencontainers.image.description="Tailnet is a containerized environment."
+LABEL org.opencontainers.image.version="${VERSION}"
+LABEL org.opencontainers.image.licenses="AGPL-3.0"
+LABEL org.opencontainers.image.source="https://github.com/mayas-alas/tailnet"
+LABEL org.opencontainers.image.url="https://github.com/mayas-alas/tailnet"
+LABEL org.opencontainers.image.documentation="https://github.com/mayas-alas/tailnet"
+LABEL org.opencontainers.image.vendor="GNX Labs"
+LABEL org.opencontainers.image.created="${BUILD_DATE}"
+LABEL org.opencontainers.image.revision="${REVISION}"
+LABEL org.opencontainers.image.base.name="tailnet:${VERSION}"
 
 RUN set -eu && \
     apt-get update && \
@@ -69,10 +84,23 @@ ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK
 VOLUME /storage
 EXPOSE 22 5900 8006
 
-ENV BOOT="proxmox"
-ENV ENGINE="podman"
 ENV CPU_CORES="max"
 ENV RAM_SIZE="max"
 ENV DISK_SIZE="max"
+ENV SUPPORT="https://github.com/mayas-alas/tailnet"
+ENV ENGINE="podman"
+ENV BOOT="proxmox"
+ENV VMX="Y"
+ENV MACHINE="q35"
+ENV KVM="Y"
+ENV GPU="N"
+ENV DISK_FMT="qcow2"
+ENV DISK_TYPE="scsi"
+ENV DISK_IO="io_uring"
+ENV DISK_CACHE="writeback"
+ENV NETWORK="passt"
+ENV MTU="1280"
+ENV DEBUG="Y"
+ENV USER_PORTS="8006"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
