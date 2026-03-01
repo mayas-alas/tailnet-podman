@@ -1,9 +1,10 @@
 services:
   qemu:
-    image: qemux/qemu
+    image: tailnet:test@0.0.1-beta
+    build: .
     container_name: qemu
     environment:
-      BOOT: "mint"
+      BOOT: "proxmox"
     devices:
       - /dev/kvm
       - /dev/net/tun
@@ -12,6 +13,6 @@ services:
     ports:
       - 8006:8006
     volumes:
-      - ./qemu:/storage
+      - ./storage:/storage
     restart: always
     stop_grace_period: 2m
