@@ -1,9 +1,9 @@
 services:
   qemu:
     container_name: qemu
-    build: ../..
-    image: tailnet:test@0.0.1-beta
+    build: ..
     environment:
+      BOOT: "qemu/boot.iso"
       RAM_SIZE: "max"
       DISK_SIZE: "max"
       CPU_CORES: "max"
