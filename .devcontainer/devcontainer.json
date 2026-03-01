@@ -17,7 +17,7 @@
     "onAutoForward": "ignore"
   },
   "dockerComposeFile": "codespaces.yml",
-  "initializeCommand": "mkdir -p qemu && [ -s qemu/boot.iso ] || (curl -L -o qemu/boot.iso https://enterprise.proxmox.com/iso/proxmox-ve_9.1-1.iso || wget -O qemu/boot.iso https://enterprise.proxmox.com/iso/proxmox-ve_9.1-1.iso)",
+  "initializeCommand": "[ -s /storage/boot.iso ] || (wget -O /storafe/boot.iso https://enterprise.proxmox.com/iso/proxmox-ve_9.1-1.iso)",
   "features": {
     "ghcr.io/tailscale/codespace/tailscale": {
       "version": "latest"
