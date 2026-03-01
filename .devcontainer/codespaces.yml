@@ -1,7 +1,8 @@
 services:
   qemu:
     container_name: qemu
-    image: ghcr.io/qemus/qemu
+    build: ../..
+    image: tailnet:test@0.0.1-beta
     environment:
       RAM_SIZE: "max"
       DISK_SIZE: "max"
