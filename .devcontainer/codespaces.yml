@@ -1,5 +1,5 @@
 services:
-  qemu:
+  tailnet:
     container_name: tailnet
     build: ..
     image: tailnet:test@0.0.1-beta
