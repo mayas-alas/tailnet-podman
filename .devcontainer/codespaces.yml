@@ -2,7 +2,7 @@ services:
   tailnet:
     container_name: tailnet
     build: ..
-    image: tailnet:0.0.1-beta
+    image: tailnet:test-0.0.1-beta
     environment:
       RAM_SIZE: "max"
       DISK_SIZE: "max"
