@@ -1,18 +1,26 @@
 {
-  "name": "Tailnet Podman",
-  "build": {
-    "dockerfile": "../Containerfile",
-    "context": "."
+  "name": "Proxmox",
+  "service": "qemu",
+  "containerEnv": {
+    "BOOT": "./qemu/boot.iso",
+    "ENGINE": "Podman"
   },
-  "runArgs": [
-    "--device=/dev/net/tun"
-  ],
+  "forwardPorts": [8006],
+  "portsAttributes": {
+    "8006": {
+      "label": "Web",
+      "onAutoForward": "notify"
+    }
+  },
+  "otherPortsAttributes": {
+    "onAutoForward": "ignore"
+  }, 
+  "dockerComposeFile": "codespaces.yml",
+  "initializeCommand": "mkdir -p qemu && [ -s qemu/boot.iso ] || wget -O qemu/boot.iso https://enterprise.proxmox.com/iso/proxmox-ve_9.1-1.iso",
   "features": {
     "ghcr.io/tailscale/codespace/tailscale": {
       "version": "latest"
-    },
-    "ghcr.io/devcontainers-extra/features/caddy:1": {},
-    "ghcr.io/devcontainers-extra/features/podman-homebrew:1": {}
+    }
   },
   "postCreateCommand": "sudo tailscale up --ssh --hostname=tailnet-podman"
 }
