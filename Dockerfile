@@ -69,9 +69,9 @@ ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK
 VOLUME /storage
 EXPOSE 22 5900 8006
 
-ENV BOOT="alpine"
-ENV CPU_CORES="2"
-ENV RAM_SIZE="2G"
-ENV DISK_SIZE="64G"
+ENV BOOT="proxmox"
+ENV CPU_CORES="max"
+ENV RAM_SIZE="max"
+ENV DISK_SIZE="512G"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
