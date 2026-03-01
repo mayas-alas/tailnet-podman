@@ -1,6 +1,6 @@
 {
   "name": "Proxmox",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "proxmox"
   },

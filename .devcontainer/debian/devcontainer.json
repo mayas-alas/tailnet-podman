@@ -1,6 +1,6 @@
 {
   "name": "Debian",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "debian"
   },

@@ -1,8 +1,10 @@
 services:
-  tailnet:
+  qemu:
+    image: tailnet-qemu:0.0.1-beta
+    container_name: qemu
     build: .
-    image: tailnet:test-0.0.1-beta
-    container_name: tailnet:test-0.0.1-beta
+    environment:
+      BOOT: "proxmox"
     devices:
       - /dev/kvm
       - /dev/net/tun

@@ -1,6 +1,6 @@
 {
   "name": "Ubuntu Desktop",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "ubuntu"
   },

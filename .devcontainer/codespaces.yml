@@ -1,8 +1,8 @@
 services:
-  tailnet:
-    container_name: tailnet
+  qemu:
+    container_name: qemu
     build: ..
-    image: tailnet:test-0.0.1-beta
+    image: tailnet-qemu:0.0.1-beta
     environment:
       RAM_SIZE: "max"
       DISK_SIZE: "max"

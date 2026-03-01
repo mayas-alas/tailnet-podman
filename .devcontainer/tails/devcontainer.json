@@ -1,6 +1,6 @@
 {
   "name": "Tails",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "tails"
   },

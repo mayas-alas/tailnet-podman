@@ -153,11 +153,11 @@ getURL() {
         url="https://download.opensuse.org/distribution/leap/$version/installer/iso/agama-installer.x86_64-Leap_${version}.iso"
         arm="https://download.opensuse.org/distribution/leap/$version/installer/iso/agama-installer.aarch64-Leap_${version}.iso"
       fi ;;
-    "proxmox" )
-      name="Proxmox VE"
+    "Proxmox" | "proxmox" | "proxmoxVE" )
       version="9.1-1"
+      name="Proxmox"
       if [[ "$ret" == "url" ]]; then
-        url="www.proxmox.com/en/downloadshttps://enterprise.proxmox.com/iso/proxmox-ve_${version}.iso"
+        url="https://enterprise.proxmox.com/iso/proxmox-ve_${version}.iso"
       fi ;;
     "rocky" | "rockylinux" | "rocky-linux" )
       version="9"

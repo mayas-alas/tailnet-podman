@@ -1,6 +1,6 @@
 {
   "name": "Slackware",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "slack"
   },

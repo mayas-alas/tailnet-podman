@@ -1,6 +1,6 @@
 {
   "name": "Arch Linux",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "arch"
   },

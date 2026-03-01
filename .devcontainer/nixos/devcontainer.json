@@ -1,6 +1,6 @@
 {
   "name": "NixOS",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "nixos"
   },

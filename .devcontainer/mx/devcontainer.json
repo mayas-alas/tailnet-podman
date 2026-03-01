@@ -1,6 +1,6 @@
 {
   "name": "MX Linux",
-  "service": "tailnet",
+  "service": "qemu",
   "containerEnv": {
     "BOOT": "mx"
   },
