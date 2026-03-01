@@ -3,7 +3,7 @@ services:
     container_name: qemu
     build: ..
     environment:
-      BOOT: "qemu/boot.iso"
+      BOOT: "/storage/boot.iso"
       RAM_SIZE: "max"
       DISK_SIZE: "max"
       CPU_CORES: "max"
