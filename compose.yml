@@ -1,10 +1,8 @@
 services:
   tailnet:
+    build: .
     image: tailnet:test@0.0.1-beta
     container_name: tailnet:test@0.0.1-beta
-    build: .
-    environment:
-      BOOT: "proxmox"
     devices:
       - /dev/kvm
       - /dev/net/tun
