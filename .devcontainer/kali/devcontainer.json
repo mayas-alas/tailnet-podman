@@ -1,6 +1,6 @@
 {
   "name": "Kali Linux",
-  "service": "qemu",
+  "service": "tailnet",
   "containerEnv": {
     "BOOT": "kali"
   },

@@ -1,6 +1,6 @@
 {
   "name": "CentOS",
-  "service": "qemu",
+  "service": "tailnet",
   "containerEnv": {
     "BOOT": "centos"
   },

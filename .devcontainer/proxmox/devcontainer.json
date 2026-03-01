@@ -1,8 +1,8 @@
 {
-  "name": "Arch Linux",
+  "name": "Proxmox",
   "service": "tailnet",
   "containerEnv": {
-    "BOOT": "arch"
+    "BOOT": "proxmox"
   },
   "forwardPorts": [8006],
   "portsAttributes": {

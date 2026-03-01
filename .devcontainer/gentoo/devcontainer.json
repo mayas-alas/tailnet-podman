@@ -1,6 +1,6 @@
 {
   "name": "Gentoo",
-  "service": "qemu",
+  "service": "tailnet",
   "containerEnv": {
     "BOOT": "gentoo"
   },

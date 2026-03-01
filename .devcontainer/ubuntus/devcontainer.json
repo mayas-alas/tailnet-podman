@@ -1,6 +1,6 @@
 {
   "name": "Ubuntu Server",
-  "service": "qemu",
+  "service": "tailnet",
   "containerEnv": {
     "BOOT": "ubuntus"
   },

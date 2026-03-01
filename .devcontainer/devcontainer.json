@@ -1,9 +1,10 @@
 {
-  "name": "Proxmox",
+  "name": "Default",
   "service": "tailnet",
-  "forwardPorts": [
-    8006
-  ],
+  "containerEnv": {
+    "BOOT": "proxmox"
+  },
+  "forwardPorts": [8006],
   "portsAttributes": {
     "8006": {
       "label": "Web",
@@ -12,13 +13,7 @@
   },
   "otherPortsAttributes": {
     "onAutoForward": "ignore"
-  },
+  }, 
   "dockerComposeFile": "codespaces.yml",
-  "initializeCommand": "[ -s storage/boot.iso ] || (curl -L -o storage/boot.iso https://enterprise.proxmox.com/iso/proxmox-ve_9.1-1.iso || wget -O storage/boot.iso https://enterprise.proxmox.com/iso/proxmox-ve_9.1-1.iso)",
-  "features": {
-    "ghcr.io/tailscale/codespace/tailscale": {
-      "version": "latest"
-    }
-  },
-  "postCreateCommand": "sudo tailscale up --ssh --hostname=tailnet-podman"
+  "initializeCommand": "docker system prune --all --force"
 }

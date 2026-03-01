@@ -2,9 +2,8 @@ services:
   qemu:
     container_name: tailnet
     build: ..
+    image: tailnet:test@0.0.1-beta
     environment:
-      BOOT: "/storage/boot.iso"
-      ENGINE: "Podman"
       RAM_SIZE: "max"
       DISK_SIZE: "max"
       CPU_CORES: "max"
@@ -16,6 +15,6 @@ services:
     ports:
       - 8006:8006
     volumes:
-      - ./storage:/storage
+      - ./qemu:/storage
     restart: on-failure
     stop_grace_period: 2m

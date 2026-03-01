@@ -70,8 +70,9 @@ VOLUME /storage
 EXPOSE 22 5900 8006
 
 ENV BOOT="proxmox"
+ENV ENGINE="podman"
 ENV CPU_CORES="max"
 ENV RAM_SIZE="max"
-ENV DISK_SIZE="512G"
+ENV DISK_SIZE="max"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]

@@ -1,6 +1,6 @@
 {
   "name": "OpenSUSE",
-  "service": "qemu",
+  "service": "tailnet",
   "containerEnv": {
     "BOOT": "suse"
   },

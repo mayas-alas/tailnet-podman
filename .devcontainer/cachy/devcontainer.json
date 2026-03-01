@@ -1,6 +1,6 @@
 {
   "name": "CachyOS",
-  "service": "qemu",
+  "service": "tailnet",
   "containerEnv": {
     "BOOT": "cachy"
   },

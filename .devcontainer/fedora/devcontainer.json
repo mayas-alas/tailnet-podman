@@ -1,6 +1,6 @@
 {
   "name": "Fedora",
-  "service": "qemu",
+  "service": "tailnet",
   "containerEnv": {
     "BOOT": "fedora" 
   },
