@@ -4,6 +4,7 @@ services:
     build: ..
     environment:
       BOOT: "/storage/boot.iso"
+      ENGINE: "Podman"
       RAM_SIZE: "max"
       DISK_SIZE: "max"
       CPU_CORES: "max"

@@ -4,7 +4,7 @@ services:
     build: .
     container_name: qemu
     environment:
-      BOOT: "proxmox"
+      BOOT: "/storage/boot.iso"
     devices:
       - /dev/kvm
       - /dev/net/tun
