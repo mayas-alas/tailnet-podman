@@ -1,0 +1,13 @@
+#!/bin/bash
+# SPDX-License-Identifier: LGPL-2.1-or-later
+set -euo pipefail
+
+# Capture /etc/default/tailscaled to factory defaults for tmpfiles.d to restore at boot.
+# The tailscaled.service unit requires EnvironmentFile=/etc/default/tailscaled.
+# Without this file, the service fails to start (tailscale/tailscale#18424).
+mkdir -p "$BUILDROOT/usr/share/factory/etc/default"
+
+if [ -e "$BUILDROOT/etc/default/tailscaled" ]; then
+    cp --archive --update=none "$BUILDROOT/etc/default/tailscaled" \
+       "$BUILDROOT/usr/share/factory/etc/default/"
+fi

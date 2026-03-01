@@ -1,0 +1,13 @@
+#!/bin/bash
+# SPDX-License-Identifier: LGPL-2.1-or-later
+set -e
+
+# Capture /etc/nix in /usr/share/factory/etc for tmpfiles.d to copy at boot.
+# The nix-setup-systemd package installs /etc/nix/nix.conf during the build,
+# but sysexts can only provide files under /usr. The tmpfiles.d C directive
+# copies factory defaults to /etc at boot if not already present.
+mkdir -p "$BUILDROOT/usr/share/factory/etc"
+
+if [ -d "$BUILDROOT/etc/nix" ]; then
+    cp --archive --update=none "$BUILDROOT/etc/nix" "$BUILDROOT/usr/share/factory/etc/"
+fi

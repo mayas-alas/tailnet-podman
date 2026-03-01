@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+if [[ "${DEBUG_BUILD:-0}" == "1" ]]; then
+    set -x
+fi
+
+if [[ "${UID}" == "0" ]]; then
+    SUDO=""
+else
+    SUDO="sudo"
+fi
+
+${SUDO} sed -i 's|^MimeType=application/x-code-workspace;$|MimeType=application/x-code-workspace;inode/directory;|' /usr/share/applications/code.desktop

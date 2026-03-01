@@ -1,0 +1,7 @@
+Types: deb
+URIs: https://repository.frostyard.org/
+Suites: stable
+Components: main
+Architectures: all amd64
+Enabled: yes
+Signed-By: /etc/apt/keyrings/frostyard.gpg

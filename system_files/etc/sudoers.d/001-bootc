@@ -1,1 +1,0 @@
-%sudo ALL=(ALL) NOPASSWD: /usr/bin/bootc update, /usr/bin/bootc status, /usr/bin/bootc upgrade

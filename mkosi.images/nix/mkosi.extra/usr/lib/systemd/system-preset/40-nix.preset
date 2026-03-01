@@ -1,0 +1,3 @@
+enable nix.mount
+enable nix-daemon.socket
+enable nix-daemon.service

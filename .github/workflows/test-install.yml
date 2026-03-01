@@ -1,0 +1,55 @@
+name: Test bootc installation
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image tag to test (default: latest)'
+        required: false
+        default: 'latest'
+
+env:
+  IMAGE: ghcr.io/frostyard/snow
+
+jobs:
+  test-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/lib/jvm /usr/share/dotnet /usr/share/swift \
+            /usr/local/.ghcup /usr/local/lib/android /opt/microsoft \
+            /opt/google /opt/az /opt/hostedtoolcache
+          docker system prune -af || true
+          df -h
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | \
+            sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 qemu-utils ovmf podman skopeo
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Pull image
+        run: |
+          podman pull ${{ env.IMAGE }}:${{ inputs.image_tag || 'latest' }}
+
+      - name: Run installation tests
+        run: |
+          ./test/bootc-install-test.sh ${{ env.IMAGE }}:${{ inputs.image_tag || 'latest' }}
