@@ -2,7 +2,6 @@
   "name": "Proxmox",
   "service": "qemu",
   "containerEnv": {
-    "BOOT": "./qemu/boot.iso",
     "ENGINE": "Podman"
   },
   "forwardPorts": [8006],
