@@ -3,7 +3,6 @@ services:
     container_name: qemu
     build: ..
     image: tailnet-qemu:0.0.1-beta
-    privileged: true
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -13,3 +12,30 @@ services:
       - /dev/vhost-net
     environment:
       - BOOT=proxmox
+    volumes:
+      - ./tmp:/storage
+    network_mode: service:tailscale
+    depends_on:
+      - tailscale
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: qemu-tty
+    hostname: qemu-tty
+    privileged: true
+    environment:
+      - TS_AUTHKEY=${TAILSCALE_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_EXTRA_ARGS=--ssh --accept-dns=false
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun
+    volumes:
+      - tailnet-state:/var/lib/tailscale
+    restart: always
+
+volumes:
+  tailnet-state:
