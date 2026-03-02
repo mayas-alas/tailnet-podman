@@ -1,9 +1,7 @@
 {
   "name": "Tailnet Podman",
   "dockerComposeFile": "codespaces.yml",
-  "service": "qemu",
-  "workspaceFolder": "/workspace",
-  
+  "service": "qemu",  
   "features": {
     "ghcr.io/tailscale/codespace/tailscale": {
       "version": "latest"
