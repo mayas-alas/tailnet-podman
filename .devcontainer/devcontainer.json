@@ -1,0 +1,31 @@
+{
+  "name": "Default",
+  "service": "qemu",
+  "containerEnv": {
+    "BOOT": "proxmox",
+    "USER_PORTS": "8006,22,5900"
+  },
+  "forwardPorts": [8006],
+  "portsAttributes": {
+    "8006": {
+      "label": "Web",
+      "onAutoForward": "notify"
+    }
+  },
+  "runArgs": [
+  "--network", "bridge",
+  "--privileged",
+  "--cap-add=NET_ADMIN"
+],
+  "otherPortsAttributes": {
+    "onAutoForward": "ignore"
+  }, 
+  "features": {
+    "ghcr.io/tailscale/codespace/tailscale": {
+      "version": "latest"
+    }
+  },
+  "dockerComposeFile": "codespaces.yml",
+  "initializeCommand": "export TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY} && export TAILNET_NAME=${TAILNET_NAME}",
+  "postCreateCommand": "tailscale up --ssh --accept-dns=false --hostname=tailnet-dev"
+}

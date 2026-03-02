@@ -1,0 +1,18 @@
+services:
+  qemu:
+    image: tailnet-qemu:0.0.1-beta
+    container_name: qemu
+    build: .
+    environment:
+      BOOT: "proxmox"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    privileged: true
+    ports:
+      - 8006:8006
+    volumes:
+      - ./qemu:/storage2
+      - ./tmp:/storage
+    restart: always
+    stop_grace_period: 2m

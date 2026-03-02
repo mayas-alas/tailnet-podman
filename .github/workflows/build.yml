@@ -1,127 +1,103 @@
-name: Build sysexts
+name: Build
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: snosi
-  REPO_NAME: snosi
-  IMAGE_DESC: "Snow Linux - A minimal bootc-enabled OS image"
-  IMAGE_KEYWORDS: "linux,os,bootc,systemd,debian"
-  IMAGE_LICENSE: Apache-2.0
-  IMAGE_LOGO_URL: "" # Optional: URL to logo image
-
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'push' }}
+  group: build
+  cancel-in-progress: false
 
 jobs:
+  shellcheck:
+    name: Test
+    uses: ./.github/workflows/check.yml
   build:
+    name: Build
+    needs: shellcheck
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      actions: write
       packages: write
-      id-token: write
-      attestations: write
-
+      contents: read
     steps:
-      - name: Aggressive cleanup
-        run: |
-          # Remove Java (JDKs)
-          sudo rm -rf /usr/lib/jvm
-
-          # Remove .NET SDKs
-          sudo rm -rf /usr/share/dotnet
-
-          # Remove Swift toolchain
-          sudo rm -rf /usr/share/swift
-
-          # Remove Haskell (GHC)
-          sudo rm -rf /usr/local/.ghcup
-
-          # Remove Julia
-          sudo rm -rf /usr/local/julia*
-
-          # Remove Android SDKs
-          sudo rm -rf /usr/local/lib/android
-
-          # Remove Chromium (optional if not using for browser tests)
-          sudo rm -rf /usr/local/share/chromium
-
-          # Remove Microsoft/Edge and Google Chrome builds
-          sudo rm -rf /opt/microsoft /opt/google
-
-          # Remove Azure CLI
-          sudo rm -rf /opt/az
-
-          # Remove PowerShell
-          sudo rm -rf /usr/local/share/powershell
-
-          # Remove CodeQL and other toolcaches
-          sudo rm -rf /opt/hostedtoolcache
-
-          docker system prune -af || true
-          docker builder prune -af || true
-          df -h
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check mkosi package duplicates
-        run: ./check-duplicate-packages.sh
-
-      - name: Generate build date
-        id: date
-        run: echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
-
-      - name: Generate version tag
-        id: version
-        run: echo "tag=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
-
-      - name: setup-mkosi
-        uses: systemd/mkosi@3c3a08fb07d27fbe473625aa0725655cfb2c68bf
-
-      - name: Build main and sysexts
+      -
+        name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      -
+        name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          context: git
+          images: |
+            ghcr.io/${{ github.repository }}
+            ${{ secrets.DOCKERHUB_REPO }}
+          tags: |
+            type=raw,value=latest,priority=100
+            type=raw,value=${{ vars.MAJOR }}.${{ vars.MINOR }}
+          labels: |
+            org.opencontainers.image.title=${{ vars.NAME }}
         env:
-          # These are picked up by mkosi.postoutput script
-          CREATED_DATE: ${{ steps.date.outputs.date }}
-          DEFAULT_TAG: ${{ steps.version.outputs.tag }}
-          IMAGE_VERSION: ${{ steps.version.outputs.tag }}
-          IMAGE_NAME: ${{ env.IMAGE_NAME }}
-          IMAGE_DESC: ${{ env.IMAGE_DESC }}
-          IMAGE_KEYWORDS: ${{ env.IMAGE_KEYWORDS }}
-          IMAGE_LICENSE: ${{ env.IMAGE_LICENSE }}
-          IMAGE_LOGO_URL: ${{ env.IMAGE_LOGO_URL }}
-          # These are automatically available from GitHub context
-          GITHUB_SHA: ${{ github.sha }}
-          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
-        run: |
-          sudo -E mkosi build
-          sudo ./sysextmv.sh
-          sudo ./manifestmv.sh
-      - name: Publish sysexts to frostyard repo
-        if: github.event_name != 'pull_request'
-        uses: frostyard/repogen/.github/actions/publish-to-r2@f9e0706f1be976424a8728c19cbe9238c47edf6e
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Login into Docker Hub
+        uses: docker/login-action@v3
         with:
-          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          r2-bucket: frostyardrepo
-          skip-duplicates: true
-          gpg-private-key: ${{ secrets.REPOGEN_GPG_KEY }}
-          packages-dir: ./output/sysexts
-          package-type: sysext # or sysext
-          base-url: https://repository.frostyard.org # required for sysext
-      - name: Upload manifests to R2
-        if: github.event_name != 'pull_request'
-        uses: ryand56/r2-upload-action@b801a390acbdeb034c5e684ff5e1361c06639e7c
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          r2-bucket: frostyardrepo
-          source-dir: output/manifests
-          destination-dir: manifests/
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          provenance: false
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          build-args: |
+            VERSION_ARG=${{ steps.meta.outputs.version }}
+      -
+        name: Create a release
+        uses: action-pack/github-release@v2
+        with:
+          tag: "v${{ steps.meta.outputs.version }}"
+          title: "v${{ steps.meta.outputs.version }}"
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      -
+        name: Increment version variable
+        uses: action-pack/bump@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      -
+        name: Push to Gitlab mirror
+        uses: action-pack/gitlab-sync@v3
+        with:
+          url: ${{ secrets.GITLAB_URL }}
+          token: ${{ secrets.GITLAB_TOKEN }}
+          username: ${{ secrets.GITLAB_USERNAME }}
+      -
+        name: Send mail
+        uses: action-pack/send-mail@v1
+        with:
+          to: ${{secrets.MAILTO}}
+          from: Github Actions <${{secrets.MAILTO}}>
+          connection_url: ${{secrets.MAIL_CONNECTION}}
+          subject: Build of ${{ github.event.repository.name }} v${{ steps.meta.outputs.version }} completed
+          body: |
+              The build job of ${{ github.event.repository.name }} v${{ steps.meta.outputs.version }} was completed successfully!
+
+              See https://github.com/${{ github.repository }}/actions for more information.
