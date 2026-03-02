@@ -11,6 +11,11 @@
       "onAutoForward": "notify"
     }
   },
+  "runArgs": [
+  "--network", "bridge",
+  "--privileged",
+  "--cap-add=NET_ADMIN"
+],
   "otherPortsAttributes": {
     "onAutoForward": "ignore"
   }, 
