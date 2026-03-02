@@ -85,7 +85,7 @@ ENV DISK_IO="io_uring"
 ENV DISK_CACHE="writeback"
 ENV NETWORK="passt"
 ENV MTU="1280"
-ENV VM_NET_IP="10.4.20.99"
+ENV VM_NET_IP="172.17.0.55"
 ENV ENGINE="podman"
 ENV DEBUG="Y"
 
