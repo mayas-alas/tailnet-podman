@@ -1,16 +1,8 @@
 {
-  "name": "Tailnet Podman",
+  "name": "Tailnet Proxmox",
   "dockerComposeFile": "codespaces.yml",
   "service": "qemu",  
-  "features": {
-    "ghcr.io/tailscale/codespace/tailscale": {
-      "version": "latest"
-    }
-  },
-
   "otherPortsAttributes": {
     "onAutoForward": "ignore"
-  },
-
-  "postCreateCommand": "tailscale up --authkey=${TAILSCALE_AUTHKEY} --ssh --hostname=tailnet-dev"
+  }
 }
