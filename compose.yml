@@ -1,61 +1,35 @@
 services:
-  tailscale:
-    image: tailscale/tailscale:latest
-    container_name: qemu-tty
-    hostname: qemu-tty
-    environment:
-      - TS_AUTHKEY=${TAILSCALE_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-      - TS_EXTRA_ARGS=--ssh --accept-dns=false
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-      - SYS_MODULE
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    volumes:
-      - tailnet-state:/var/lib/tailscale
-    restart: always
-    networks:
-      - zone1
-      - zone2
-
   qemu:
     container_name: qemu
     build: .
-    image: tailnet-qemu:0.0.1-beta
+    image: tailnet-qemu:0.0.2-beta
     devices:
       - /dev/kvm
+      - /dev/vhost-net
+      - /dev/net/tun
     privileged: true
-    volumes:
-      - ./qemu:/storage2
-      - ./tmp:/storage
-      - ..:/workspaces/tailnet-podman
-    restart: on-failure
-    stop_grace_period: 2m
-    network_mode: bridge
-    depends_on:
-      - tailscale
+    cap_add:
+      - NET_ADMIN
+    environment:
+      # Keeps the default primary network as passt (eth0)
+      - NETWORK=passt
+      # Injects your extra slirp networks directly into QEMU without touching .sh files
+      - ARGUMENTS=-netdev user,id=net1,net=172.18.0.0/24 -device virtio-net-pci,netdev=net1 -netdev user,id=net2,net=124.10.0.0/24 -device virtio-net-pci,netdev=net2
     networks:
       zone1:
         ipv4_address: 172.18.0.100
       zone2:
         ipv4_address: 124.10.0.100
 
+# Docker natively creates the subnets on the host and attaches them
 networks:
   zone1:
     driver: bridge
     ipam:
       config:
-        - subnet: "172.18.0.0/24"  # Zone 1 (IPv4)
-        - gateway: "172.18.0.1"
+        - subnet: 172.18.0.0/24
   zone2:
     driver: bridge
     ipam:
       config:
-        - subnet: "124.10.0.0/24"  # Zone 2 (IPv4)
-        - gateway: "124.10.0.1"
-
-volumes:
-  tailnet-state:
+        - subnet: 124.10.0.0/24
