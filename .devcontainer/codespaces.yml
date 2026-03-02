@@ -2,7 +2,7 @@ services:
   qemu:
     image: tailnet-qemu:0.0.1-beta
     container_name: qemu
-    build: .
+    build: ..
     environment:
       BOOT: "proxmox"
     devices:
