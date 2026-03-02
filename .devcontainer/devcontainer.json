@@ -1,13 +1,24 @@
 {
-  "name": "Default",
+  "name": "Proxmox",
   "service": "qemu",
-  "workspaceFolder": "/workspaces/tailnet-podman",
   "containerEnv": {
-    "BOOT": "proxmox",
-    "USER_PORTS": "8006,22,5900"
+    "BOOT": "proxmox"
   },
   "otherPortsAttributes": {
     "onAutoForward": "ignore"
   },
-  "dockerComposeFile": "codespaces.yml"
+  "dockerComposeFile": "../codespaces.yml",
+  "initializeCommand": [
+    "docker system prune --all --force",  // Clean up old containers and networks
+    "docker network create -d bridge --subnet=172.18.0.0/24 --gateway=172.18.0.1 zone1", // Create Zone 1 (172.18.0.0/24)
+    "docker network create -d bridge --subnet=124.10.0.0/24 --gateway=124.10.0.1 zone2", // Create Zone 2 (124.10.0.0/24)
+    "docker network connect zone1 qemu", // Connect QEMU container to Zone 1
+    "docker network connect zone2 qemu", // Connect QEMU container to Zone 2
+    "echo 'Network setup completed.'"
+  ],
+  "finalizeCommand": [
+    "echo 'Finalizing setup...'", 
+    "docker network inspect zone1", // Inspect Zone 1 network settings
+    "docker network inspect zone2"  // Inspect Zone 2 network settings
+  ]
 }
