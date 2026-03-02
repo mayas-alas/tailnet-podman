@@ -1,9 +1,19 @@
 {
   "name": "Default",
   "service": "qemu",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/tailnet-podman,type=bind",
   "containerEnv": {
     "BOOT": "proxmox",
     "USER_PORTS": "8006,22,5900"
+  },
+  "runArgs": [
+    "--network",
+    "bridge",
+    "--privileged",
+    "--cap-add=NET_ADMIN"
+  ],
+  "otherPortsAttributes": {
+    "onAutoForward": "ignore"
   },
   "dockerComposeFile": "codespaces.yml"
 }
