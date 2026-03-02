@@ -2,7 +2,8 @@
   "name": "Default",
   "service": "qemu",
   "containerEnv": {
-    "BOOT": "proxmox"
+    "BOOT": "proxmox",
+    "USER_PORTS": "8006,22,5900"
   },
   "forwardPorts": [8006],
   "portsAttributes": {
