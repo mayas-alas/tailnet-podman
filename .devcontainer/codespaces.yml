@@ -8,6 +8,7 @@ services:
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
       - TS_EXTRA_ARGS=--ssh
+      - TS_SERVE_CONFIG=/config/ts-serve.json
     cap_add:
       - NET_ADMIN
       - NET_RAW
