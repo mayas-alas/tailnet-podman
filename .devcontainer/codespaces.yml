@@ -6,10 +6,15 @@ services:
     environment:
       - TS_AUTHKEY=${TAILSCALE_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=true
+      - TS_USERSPACE=false
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
     volumes:
       - tailnet-state:/var/lib/tailscale
-    privileged: true
     restart: always
 
   qemu:
@@ -18,7 +23,6 @@ services:
     image: tailnet-qemu:0.0.1-beta
     devices:
       - /dev/kvm
-      - /dev/net/tun
     privileged: true
     volumes:
       - ./qemu:/storage2
