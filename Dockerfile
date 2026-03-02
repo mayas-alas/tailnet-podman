@@ -3,7 +3,7 @@
 FROM debian:trixie-slim
 
 ARG TARGETARCH
-ARG VERSION_ARG="0.0"
+ARG VERSION_ARG="0.0.1-beta"
 ARG VERSION_UTK="1.2.0"
 ARG VERSION_VNC="1.7.0-beta"
 ARG VERSION_PASST="2025_09_19"
@@ -69,9 +69,23 @@ ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK
 VOLUME /storage
 EXPOSE 22 5900 8006
 
-ENV BOOT="alpine"
-ENV CPU_CORES="2"
-ENV RAM_SIZE="2G"
-ENV DISK_SIZE="64G"
+ENV SUPPORT="https://github.com/mayas-alas/tailnet"
+ENV BOOT="proxmox"
+ENV VMX="Y"
+ENV CPU_CORES="max"
+ENV RAM_SIZE="max"
+ENV DISK_SIZE="512G"
+ENV MACHINE="q35"
+ENV KVM="Y"
+ENV GPU="N"
+ENV DISK_FMT="qcow2"
+ENV DISK_TYPE="scsi"
+ENV DISK_IO="io_uring"
+ENV DISK_CACHE="writeback"
+ENV NETWORK="passt"
+ENV MTU="1280"
+ENV VM_NET_IP="10.4.20.99"
+ENV ENGINE="podman"
+ENV DEBUG="Y"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
