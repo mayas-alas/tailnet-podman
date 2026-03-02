@@ -66,10 +66,6 @@ COPY --chmod=744 ./web/conf/nginx.conf /etc/nginx/default.conf
 
 ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK}/utk_${VERSION_UTK}_${TARGETARCH}.bin" /run/utk.bin
 
-
-VOLUME /storage
-EXPOSE 22 5900 8006
-
 ENV SUPPORT="https://github.com/mayas-alas/tailnet"
 ENV BOOT="proxmox"
 ENV VMX="Y"
@@ -85,7 +81,7 @@ ENV DISK_IO="io_uring"
 ENV DISK_CACHE="writeback"
 ENV NETWORK="passt"
 ENV MTU="1500"
-ENV VM_NET_IP="172.18.0.55"
+ENV USER_PORTS="22,5900,8006"
 ENV DEBUG="Y"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
