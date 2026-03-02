@@ -7,12 +7,23 @@ services:
       BOOT: "proxmox"
     devices:
       - /dev/kvm
-      - /dev/net/tun
-    privileged: true
-    ports:
-      - 8006:8006
+      - /dev/vhost-net
     volumes:
-      - ./qemu:/storage2
       - ./tmp:/storage
     restart: always
-    stop_grace_period: 2m
+    depends_on:
+      - tailscale
+    network_mode: service:tailscale
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: qemu-tty
+    hostname: qemu-tty
+    environment:
+      - TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=true
+    ports:
+      - 8006
+    
+   
+  
