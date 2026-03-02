@@ -3,11 +3,6 @@ services:
     container_name: qemu
     build: ..
     image: tailnet-qemu:0.0.1-beta
-    network_mode: bridge
-    environment:
-      RAM_SIZE: "max"
-      DISK_SIZE: "max"
-      CPU_CORES: "max"
     devices:
       - /dev/kvm
       - /dev/net/tun
