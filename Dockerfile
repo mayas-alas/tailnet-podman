@@ -89,8 +89,8 @@ ENV SSL="Y"
 ENV SSL_CERT="/etc/nginx/ssl/cert.pem"
 ENV SSL_KEY="/etc/nginx/ssl/key.pem"
 ENV DEBUG="Y"
-
-# Accept the extra QEMU arguments
 ENV ARGUMENTS="-netdev user,id=net1,net=172.18.0.0/24,ipv6=on,ipv6-net=fd00:18::/64 -device virtio-net-pci,netdev=net1 -netdev user,id=net2,net=124.10.0.0/24,ipv6=on,ipv6-net=fd00:10::/64 -device virtio-net-pci,netdev=net2 -fw_cfg name=opt/net-setup.sh,file=/run/net-setup.sh"
+
+VOLUME /storage
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
