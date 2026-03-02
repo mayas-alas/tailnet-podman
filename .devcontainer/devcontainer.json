@@ -22,5 +22,5 @@
     "onAutoForward": "ignore"
   },
 
-  "postCreateCommand": "sudo tailscale up --authkey=${TAILSCALE_AUTHKEY} --ssh --accept-dns=false --hostname=tailnet-dev"
+  "postCreateCommand": "tailscale up --authkey=${TAILSCALE_AUTHKEY} --ssh --accept-dns=false --hostname=tailnet-dev"
 }
