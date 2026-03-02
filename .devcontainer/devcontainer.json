@@ -20,5 +20,6 @@
     }
   },
   "dockerComposeFile": "codespaces.yml",
-  "initializeCommand": "export TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY} && export TAILNET_NAME=${TAILNET_NAME} && tailscale up -ssh --hostname=${TAILNET_NAME}-dev && docker system prune --all --force"
+  "postCreateCommand": "sudo tailscale up --ssh --hostname=tailnet-dev",
+  "initializeCommand": "export TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY} && export TAILNET_NAME=${TAILNET_NAME} && docker system prune --all --force"
 }
