@@ -70,9 +70,6 @@ COPY --chmod=755 ./net-setup.sh /run/net-setup.sh
 
 ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK}/utk_${VERSION_UTK}_${TARGETARCH}.bin" /run/utk.bin
 
-VOLUME /storage
-EXPOSE 22 5900 8006
-
 ENV SUPPORT="https://github.com/mayas-alas/tailnet"
 ENV BOOT="proxmox"
 ENV VMX="Y"
