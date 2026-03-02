@@ -25,6 +25,12 @@ services:
       - TS_USERSPACE=true
     ports:
       - 8006:8006
+    privileged: true
+    volumes:
+      - tailnet-state:/var/lib/tailscale
+    restart: always
+volumes:
+  tailnet-state:
     
    
   
