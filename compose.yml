@@ -17,6 +17,9 @@ services:
     volumes:
       - tailnet-state:/var/lib/tailscale
     restart: always
+    networks:
+      - zone1
+      - zone2
 
   qemu:
     container_name: qemu
@@ -31,9 +34,28 @@ services:
       - ..:/workspaces/tailnet-podman
     restart: on-failure
     stop_grace_period: 2m
-    network_mode: service:tailscale
+    network_mode: bridge
     depends_on:
       - tailscale
+    networks:
+      zone1:
+        ipv4_address: 172.18.0.100
+      zone2:
+        ipv4_address: 124.10.0.100
+
+networks:
+  zone1:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.18.0.0/24"  # Zone 1 (IPv4)
+        - gateway: "172.18.0.1"
+  zone2:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "124.10.0.0/24"  # Zone 2 (IPv4)
+        - gateway: "124.10.0.1"
 
 volumes:
   tailnet-state:
