@@ -45,6 +45,24 @@ if [[ "${WEB:-}" != [Nn]* ]]; then
 
   fi
 
+  if [[ "${SSL:-}" != [Nn]* ]]; then
+
+    : "${SSL_CERT:="/etc/nginx/ssl/cert.pem"}"
+    : "${SSL_KEY:="/etc/nginx/ssl/key.pem"}"
+
+    mkdir -p "$(dirname "$SSL_CERT")"
+
+    if [ ! -f "$SSL_CERT" ] || [ ! -f "$SSL_KEY" ]; then
+      openssl req -x509 -nodes -newkey rsa:2048 \
+        -keyout "$SSL_KEY" -out "$SSL_CERT" \
+        -days 3650 -subj "/CN=${HOSTNAME:-localhost}" 2>/dev/null
+    fi
+
+    sed -i "s/default_server/ssl default_server/" /etc/nginx/sites-enabled/web.conf
+    sed -i "/ssl default_server/a\\    ssl_certificate ${SSL_CERT};\n    ssl_certificate_key ${SSL_KEY};" /etc/nginx/sites-enabled/web.conf
+
+  fi
+
   # Start webserver
   nginx -e stderr
 
