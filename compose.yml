@@ -8,12 +8,11 @@ services:
     devices:
       - /dev/kvm
       - /dev/net/tun
-    cap_add:
-      - NET_ADMIN
+    privileged: true
     ports:
       - 8006:8006
     volumes:
-      - ./qemu:/storage
-      - ./tmp:/storage2
+      - ./qemu:/storage2
+      - ./tmp:/storage
     restart: always
     stop_grace_period: 2m
