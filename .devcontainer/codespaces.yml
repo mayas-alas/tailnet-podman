@@ -42,22 +42,29 @@ services:
     networks:
       zone1:
         ipv4_address: 172.18.0.100
+        ipv6_address: fd00::100  # Static IPv6 address for zone1
       zone2:
         ipv4_address: 124.10.0.100
+        ipv6_address: fd00:1::100  # Static IPv6 address for zone2
 
 networks:
   zone1:
     driver: bridge
     ipam:
       config:
-        - subnet: "172.18.0.0/24"
-        - gateway: "172.18.0.1"
+        - subnet: "172.18.0.0/24"  # IPv4 subnet for zone1
+          gateway: "172.18.0.1"
+        - subnet: "fd00::/64"      # IPv6 subnet for zone1
+          gateway: "fd00::1"       # IPv6 gateway for zone1
+
   zone2:
     driver: bridge
     ipam:
       config:
-        - subnet: "124.10.0.0/24"
-        - gateway: "124.10.0.1"
+        - subnet: "124.10.0.0/24"  # IPv4 subnet for zone2
+          gateway: "124.10.0.1"
+        - subnet: "fd00:1::/64"    # IPv6 subnet for zone2
+          gateway: "fd00:1::1"     # IPv6 gateway for zone2
 
 volumes:
   tailnet-state:
