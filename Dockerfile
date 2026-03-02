@@ -40,6 +40,7 @@ RUN set -eu && \
         iputils-ping \
         genisoimage \
         inotify-tools \
+        openssl \
         netcat-openbsd \
         ca-certificates \
         qemu-system-x86 && \
@@ -66,6 +67,10 @@ COPY --chmod=744 ./web/conf/nginx.conf /etc/nginx/default.conf
 
 ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK}/utk_${VERSION_UTK}_${TARGETARCH}.bin" /run/utk.bin
 
+
+VOLUME /storage
+EXPOSE 22 5900 8006
+
 ENV SUPPORT="https://github.com/mayas-alas/tailnet"
 ENV BOOT="proxmox"
 ENV VMX="Y"
@@ -81,7 +86,9 @@ ENV DISK_IO="io_uring"
 ENV DISK_CACHE="writeback"
 ENV NETWORK="passt"
 ENV MTU="1500"
-ENV USER_PORTS="22,5900,8006"
+ENV SSL="Y"
+ENV SSL_CERT="/etc/nginx/ssl/cert.pem"
+ENV SSL_KEY="/etc/nginx/ssl/key.pem"
 ENV DEBUG="Y"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
