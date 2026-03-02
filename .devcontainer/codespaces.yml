@@ -10,6 +10,8 @@ services:
       - TS_SERVE_CONFIG=/config/ts-serve.json
     cap_add:
       - NET_ADMIN
+    ports:
+      - 8006:8006
     volumes:
       - tailnet-state:/var/lib/tailscale
       - ../web/conf:/config
