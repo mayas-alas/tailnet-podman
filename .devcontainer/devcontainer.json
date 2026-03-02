@@ -10,17 +10,9 @@
     }
   },
 
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-azuretools.vscode-docker"
-      ]
-    }
-  },
-
   "otherPortsAttributes": {
     "onAutoForward": "ignore"
   },
 
-  "postCreateCommand": "tailscale up --authkey=${TAILSCALE_AUTHKEY} --ssh --accept-dns=false --hostname=tailnet-dev"
+  "postCreateCommand": "tailscale up --authkey=${TAILSCALE_AUTHKEY} --ssh --hostname=tailnet-dev"
 }
