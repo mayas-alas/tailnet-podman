@@ -10,13 +10,12 @@ services:
     devices:
       - /dev/kvm
       - /dev/net/tun
-      - /dev/sda:/disk1
-      - /dev/sdc:/disk2
     cap_add:
       - NET_ADMIN
     ports:
       - 8006:8006
     volumes:
       - ./qemu:/storage
+      - ./tmp:/storage2
     restart: on-failure
     stop_grace_period: 2m
