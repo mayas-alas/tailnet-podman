@@ -4,8 +4,6 @@ services:
     container_name: qemu
     build: .
     image: tailnet-qemu:0.0.1-beta
-    
-    # Required for BOTH QEMU and Tailscale VPN to function
     privileged: true
     cap_add:
       - NET_ADMIN
@@ -15,24 +13,29 @@ services:
       - /dev/net/tun
       - /dev/vhost-net
     
-    # Physically map the repository into the container
-    volumes:
-      - ..:/workspace:cached
+    # Explicitly map ports so Codespaces never loses them
+    ports:
+      - "8006:8006"
+      - "5900:5900"
+      - "22:22"
     
     environment:
       - BOOT=proxmox
       - USER_PORTS=8006,22,5900
       - NETWORK=passt
-      # Injects Slirp networks (IPv4 + IPv6) AND the fw_cfg net-setup.sh
-      - ARGUMENTS="-netdev user,id=net1,net=172.18.0.0/24,ipv6=on,ipv6-net=fd00:18::/64 -device virtio-net-pci,netdev=net1 -netdev user,id=net2,net=124.10.0.0/24,ipv6=on,ipv6-net=fd00:10::/64 -device virtio-net-pci,netdev=net2 -fw_cfg name=opt/net-setup.sh,file=/workspace/net-setup.sh"
+      # Injects Slirp networks (IPv4 + IPv6) AND the fw_cfg script seamlessly
+      - ARGUMENTS="-netdev user,id=net1,net=172.18.0.0/24,ipv6=on,ipv6-net=fd00:18::/64 -device virtio-net-pci,netdev=net1 -netdev user,id=net2,net=124.10.0.0/24,ipv6=on,ipv6-net=fd00:10::/64 -device virtio-net-pci,netdev=net2 -fw_cfg name=opt/net-setup.sh,file=/run/net-setup.sh"
       
     networks:
+      # Restores the main internet connection for Codespaces and Tailscale!
+      default:
       zone1:
         ipv4_address: 172.18.0.100
       zone2:
         ipv4_address: 124.10.0.100
 
 networks:
+  default:
   zone1:
     driver: bridge
     ipam:
