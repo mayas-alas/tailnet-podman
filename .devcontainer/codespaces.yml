@@ -13,6 +13,8 @@ services:
     volumes:
       - tailnet-state:/var/lib/tailscale
       - ../web/conf:/config
+    ports:
+      - 8006:8006
     restart: always
 
   qemu:
