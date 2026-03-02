@@ -66,12 +66,6 @@ COPY --chmod=744 ./web/conf/nginx.conf /etc/nginx/default.conf
 
 ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK}/utk_${VERSION_UTK}_${TARGETARCH}.bin" /run/utk.bin
 
-# Install Tailscale from official repository
-RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null \
- && curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list \
- && apt-get update \
- && apt-get install -y --no-install-recommends tailscale \
- && rm -rf /var/lib/apt/lists/*
 
 VOLUME /storage
 EXPOSE 22 5900 8006
