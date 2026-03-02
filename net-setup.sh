@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-echo "Applying Proxmox network for (IPv4 + IPv6)..."
+echo "Applying Proxmox network fix (IPv4 + IPv6)..."
 
 cat << 'EOF' > /etc/network/interfaces
 auto lo
@@ -39,4 +39,4 @@ iface vmbr2 inet6 static
 EOF
 
 systemctl restart networking
-echo "Network setup finnish! Ping, Internet, and Tailscale (port 8006) should now work perfectly."
+echo "Network setup! Ping, Internet, and Tailscale should now work perfectly."
