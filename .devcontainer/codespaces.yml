@@ -19,7 +19,8 @@ services:
       - USER_PORTS=8006,22,5900
       - NETWORK=passt
       - ARGUMENTS=-netdev user,id=net1,net=172.18.0.0/24 -device virtio-net-pci,netdev=net1 -netdev user,id=net2,net=124.10.0.0/24 -device virtio-net-pci,netdev=net2
-      
+    volumes:
+      - ..:/workspace:cached
     networks:
       zone1:
         ipv4_address: 172.18.0.100
