@@ -1,18 +1,22 @@
 services:
   qemu:
-    image: tailnet-qemu:0.0.1-beta
     container_name: qemu
-    build: .
+    build: ..
+    image: tailnet-qemu:0.0.1-beta
     environment:
-      BOOT: "proxmox"
+      RAM_SIZE: "max"
+      DISK_SIZE: "max"
+      CPU_CORES: "max"
     devices:
       - /dev/kvm
       - /dev/net/tun
+      - /dev/sda:/disk1
+      - /dev/sdc:/disk2
     cap_add:
       - NET_ADMIN
     ports:
       - 8006:8006
     volumes:
       - ./qemu:/storage
-    restart: always
+    restart: on-failure
     stop_grace_period: 2m
