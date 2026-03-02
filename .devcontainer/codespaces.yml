@@ -6,15 +6,15 @@ services:
     environment:
       - TS_AUTHKEY=${TAILSCALE_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=true
-      - TS_SERVE_CONFIG=/config/ts-serve.json
+      - TS_USERSPACE=false
     cap_add:
       - NET_ADMIN
-    ports:
-      - 8006:8006
+      - NET_RAW
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
     volumes:
       - tailnet-state:/var/lib/tailscale
-      - ../web/conf:/config
     restart: always
 
   qemu:
