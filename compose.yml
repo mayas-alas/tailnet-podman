@@ -8,6 +8,7 @@ services:
     devices:
       - /dev/kvm
       - /dev/vhost-net
+      - /dev/net/tun
     volumes:
       - ./tmp:/storage
       - ./qemu:/storage2
@@ -24,7 +25,7 @@ services:
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=true
     ports:
-      - 8006
+      - 8006:8006
     
    
   
