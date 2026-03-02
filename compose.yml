@@ -10,6 +10,7 @@ services:
       - /dev/vhost-net
     volumes:
       - ./tmp:/storage
+      - ./qemu:/storage2
     restart: always
     depends_on:
       - tailscale
