@@ -3,7 +3,6 @@ services:
     image: tailnet-qemu:0.0.1-beta
     container_name: qemu
     build: .
-    network_mode: bridge
     environment:
       BOOT: "proxmox"
     devices:
