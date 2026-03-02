@@ -3,11 +3,13 @@ services:
     image: tailnet-qemu:0.0.1-beta
     container_name: qemu
     build: ..
+    privileged: true
     environment:
       BOOT: "proxmox"
     devices:
       - /dev/kvm
       - /dev/vhost-net
+      - /dev/net/tun
     volumes:
       - ./tmp:/storage
       - ./qemu:/storage2
