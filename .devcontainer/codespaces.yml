@@ -1,16 +1,30 @@
 services:
   qemu:
-    container_name: qemu
-    build: ..
     image: tailnet-qemu:0.0.1-beta
+    container_name: qemu
+    build: .
+    environment:
+      BOOT: "proxmox"
     devices:
       - /dev/kvm
-      - /dev/net/tun
-    privileged: true
+      - /dev/vhost-net
+    volumes:
+      - ./tmp:/storage
+      - ./qemu:/storage2
+    restart: always
+    depends_on:
+      - tailscale
+    network_mode: service:tailscale
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: qemu-tty
+    hostname: qemu-tty
+    environment:
+      - TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=true
     ports:
       - 8006:8006
-    volumes:
-      - ./qemu:/storage2
-      - ./tmp:/storage
-    restart: on-failure
-    stop_grace_period: 2m
+    
+   
+  
