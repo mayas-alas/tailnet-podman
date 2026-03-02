@@ -88,5 +88,6 @@ ENV MTU="1280"
 ENV VM_NET_IP="172.17.0.55"
 ENV ENGINE="podman"
 ENV DEBUG="Y"
+ENV USER_PORTS: "22,5900,8006"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
