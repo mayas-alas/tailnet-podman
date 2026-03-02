@@ -7,7 +7,7 @@ services:
       - TS_AUTHKEY=${TAILSCALE_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
-      - TS_EXTRA_ARGS=--ssh
+      - TS_EXTRA_ARGS=--ssh --accept-dns=false
     cap_add:
       - NET_ADMIN
       - NET_RAW
