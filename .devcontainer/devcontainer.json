@@ -20,9 +20,10 @@
     }
   },
   "dockerComposeFile": "codespaces.yml",
-  "initializeCommand": "tailscale up -ssh --hostname=tailnet-dev && docker system prune --all --force",
+  "initializeCommand": "docker system prune --all --force",
   "containerEnv": {
     "TAILSCALE_AUTHKEY": "${TAILSCALE_AUTHKEY}",
     "TAILNET_NAME": "${TAILNET_NAME}"
-  }
+  },
+  "postCreateCommand": "sudo tailscale up --ssh --hostname=tailnet-dev"
 }
