@@ -65,8 +65,10 @@ COPY --chmod=664 ./web/conf/defaults.json /usr/share/novnc
 COPY --chmod=664 ./web/conf/mandatory.json /usr/share/novnc
 COPY --chmod=744 ./web/conf/nginx.conf /etc/nginx/default.conf
 
-ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK}/utk_${VERSION_UTK}_${TARGETARCH}.bin" /run/utk.bin
+# Add our new Proxmox network fix script securely into the image
+COPY --chmod=755 ./net-setup.sh /run/net-setup.sh
 
+ADD --chmod=755 "https://github.com/qemus/fiano/releases/download/v${VERSION_UTK}/utk_${VERSION_UTK}_${TARGETARCH}.bin" /run/utk.bin
 
 VOLUME /storage
 EXPOSE 22 5900 8006
@@ -90,5 +92,8 @@ ENV SSL="Y"
 ENV SSL_CERT="/etc/nginx/ssl/cert.pem"
 ENV SSL_KEY="/etc/nginx/ssl/key.pem"
 ENV DEBUG="Y"
+
+# Accept the extra QEMU arguments
+ENV ARGUMENTS="-netdev user,id=net1,net=172.18.0.0/24,ipv6=on,ipv6-net=fd00:18::/64 -device virtio-net-pci,netdev=net1 -netdev user,id=net2,net=124.10.0.0/24,ipv6=on,ipv6-net=fd00:10::/64 -device virtio-net-pci,netdev=net2 -fw_cfg name=opt/net-setup.sh,file=/run/net-setup.sh"
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
